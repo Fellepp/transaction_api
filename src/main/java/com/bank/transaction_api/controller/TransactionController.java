@@ -1,12 +1,10 @@
-package com.example.transaction_api.controller;
+package com.bank.transaction_api.controller;
 
-import com.example.transaction_api.model.Account;
-import com.example.transaction_api.model.Transaction;
-import com.example.transaction_api.service.TransactionService;
-import org.springframework.http.HttpStatus;
+import com.bank.transaction_api.model.Account;
+import com.bank.transaction_api.model.Transaction;
+import com.bank.transaction_api.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.transaction_api.model;
+package com.bank.transaction_api.model;
 
 import jakarta.persistence.*;
 

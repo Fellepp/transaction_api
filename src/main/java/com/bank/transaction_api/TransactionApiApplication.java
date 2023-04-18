@@ -1,8 +1,7 @@
-package com.example.transaction_api;
+package com.bank.transaction_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
 public class TransactionApiApplication {

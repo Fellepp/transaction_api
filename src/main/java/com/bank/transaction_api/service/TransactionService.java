@@ -1,19 +1,19 @@
-package com.example.transaction_api.service;
+package com.bank.transaction_api.service;
 
-import com.example.transaction_api.TranscationInterface.TransactionServiceInterface.TransactionServiceInterface;
-import com.example.transaction_api.model.Account;
-import com.example.transaction_api.model.Transaction;
-import com.example.transaction_api.repository.AccountRepository;
-import com.example.transaction_api.repository.TransactionRepository;
+import com.bank.transaction_api.model.Account;
+import com.bank.transaction_api.model.Transaction;
+import com.bank.transaction_api.repository.AccountRepository;
+import com.bank.transaction_api.repository.TransactionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TransactionService implements TransactionServiceInterface {
+public class TransactionService {
     private final TransactionRepository transactionRepo;
     private final AccountRepository accountRepo;
 
@@ -33,19 +33,20 @@ public class TransactionService implements TransactionServiceInterface {
     }
 
     public List<Transaction> getValidTransactions() {
-        return (List<Transaction>) transactionRepo.findValidTransactions();
+        return transactionRepo.findValidTransactions();
     }
 
+    @Transactional
     public ResponseEntity<?> transaction(long registeredTime, double cashAmount, long sourceAccountId, long destinationAccountId) {
         Account sourceAccount;
         Account destinationAccount;
 
-        Optional<Account> OptionalSourceAccount = accountRepo.findById(sourceAccountId);
-        Optional<Account> OptionalDestinationAccount = accountRepo.findById(destinationAccountId);
+        Optional<Account> optionalSourceAccount = accountRepo.findById(sourceAccountId);
+        Optional<Account> optionalDestinationAccount = accountRepo.findById(destinationAccountId);
 
         try {
-            sourceAccount = OptionalSourceAccount.get();
-            destinationAccount = OptionalDestinationAccount.get();
+            sourceAccount = optionalSourceAccount.get();
+            destinationAccount = optionalDestinationAccount.get();
         } catch (Exception e) {
             Transaction returnTransaction = new Transaction(cashAmount, null, null, registeredTime, false);
             returnTransaction.setSuccessDescription("One of the accounts could not be found.");
@@ -62,10 +63,8 @@ public class TransactionService implements TransactionServiceInterface {
             transactionRepo.save(returnTransaction);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot use the same account for source and destination.");
-        }
-
-        if (sourceAccount.withdraw(cashAmount) &&
-                destinationAccount.deposit(cashAmount)) {
+        } else if (withdraw(sourceAccount, cashAmount) &&
+                deposit(destinationAccount, cashAmount)) {
 
             accountRepo.save(sourceAccount);
             accountRepo.save(destinationAccount);
@@ -82,5 +81,26 @@ public class TransactionService implements TransactionServiceInterface {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Negative values are not supported");
         }
+    }
+
+    private boolean withdraw(Account sourceAccount, double cashAmount) {
+        if (cashAmount < 0) {
+            System.out.println("The cash amount cant be negative.");
+            return false;
+        } else if (sourceAccount.getAvailableCash() - cashAmount < 0) {
+            System.out.println("The cash amount is too high. Negative values in bank is not allowed.");
+            return false;
+        }
+        sourceAccount.setAvailableCash(sourceAccount.getAvailableCash() - cashAmount);
+        return true;
+    }
+
+    private boolean deposit(Account destinationAccount, double cashAmount) {
+        if (cashAmount < 0) {
+            System.out.println("The cash amount cant be negative.");
+            return false;
+        }
+        destinationAccount.setAvailableCash(destinationAccount.getAvailableCash() + cashAmount);
+        return true;
     }
 }

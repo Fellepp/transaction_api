@@ -1,6 +1,6 @@
-package com.example.transaction_api.repository;
+package com.bank.transaction_api.repository;
 
-import com.example.transaction_api.model.Transaction;
+import com.bank.transaction_api.model.Transaction;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
