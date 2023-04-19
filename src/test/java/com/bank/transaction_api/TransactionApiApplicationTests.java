@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@SpringBootTest(classes = {TransactionApiApplication.class})
+@SpringBootTest
 public class TransactionApiApplicationTests {
 
     @Mock
