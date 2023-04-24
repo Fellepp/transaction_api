@@ -18,7 +18,7 @@ public class Account {
         this.availableCash = availableCash;
     }
 
-    public Account() {
+    public Account(){
     }
 
     public long getId() {

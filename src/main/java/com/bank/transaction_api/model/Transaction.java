@@ -19,7 +19,6 @@ public class Transaction {
     private Account destinationAccount;
 
     public Transaction(double cashAmount, Account sourceAccount, Account destinationAccount, long registeredTime, boolean success) {
-        super();
         this.cashAmount = cashAmount;
         this.sourceAccount = sourceAccount;
         this.destinationAccount = destinationAccount;

@@ -19,7 +19,6 @@ public class TransactionService {
 
 
     public TransactionService(AccountRepository accountRepo, TransactionRepository transactionRepo) {
-        super();
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
     }
